@@ -9,7 +9,7 @@ type SearchResultProps = {
 
 const SearchResults = ({ isSearchFetching, searchedPosts }: SearchResultProps) => {
     if (isSearchFetching) return <Loader />;
-    if (searchedPosts.documents.length > 0) return <GridPostList posts={searchedPosts.documents} />;
+    if (searchedPosts.length > 0) return <GridPostList posts={searchedPosts} />;
     return <div>SearchResults</div>;
 };
 

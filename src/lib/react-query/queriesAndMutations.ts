@@ -17,8 +17,9 @@ import {
     signInAccount,
     signOutAccount,
     updatePost,
+    updateUser,
 } from '../appwrite/api';
-import { INewPost, INewUser, IUpdatePost } from '@/types';
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from '@/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from './queryKeys';
 
@@ -169,14 +170,15 @@ export const useGetPosts = () => {
         queryFn: getInfinitePosts,
         getNextPageParam: (lastPage) => {
             // If there's no data, there are no more pages.
-            if (lastPage && lastPage.documents.length === 0) {
+            if (!lastPage || lastPage.documents.length === 0) {
                 return null;
             }
 
             // Use the $id of the last document as the cursor.
             const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
-            return lastId;
+            return Number(lastId); // Convert the string to a number
         },
+        initialPageParam: 0, // Add this line
     });
 };
 
@@ -200,5 +202,20 @@ export const useGetUserById = (userId: string) => {
         queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
         queryFn: () => getUserById(userId),
         enabled: !!userId,
+    });
+};
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (user: IUpdateUser) => updateUser(user),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_USER_BY_ID, data?.$id],
+            });
+        },
     });
 };
