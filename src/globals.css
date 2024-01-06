@@ -112,6 +112,14 @@
         @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
     }
 
+    @supports (-webkit-touch-callout: none) {
+        input,
+        select,
+        textarea {
+            font-size: max(16px);
+        }
+    }
+
     /* All Users */
     .user-container {
         @apply max-w-5xl flex flex-col items-start w-full gap-6 md:gap-9;
