@@ -116,7 +116,7 @@
         input,
         select,
         textarea {
-            font-size: max(12px);
+            font-size: max(16px);
         }
     }
 
